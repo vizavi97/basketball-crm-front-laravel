@@ -1,44 +1,66 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react'
 import {Block} from "../../../config/ui/Block";
-import {Box, Button, Flex, Image, Input, Text} from "@chakra-ui/react";
+import {Box, Button, Flex, Image, Input, Select, Text, toast, useToast} from "@chakra-ui/react";
 import ImageUploading, {ImageListType} from "react-images-uploading";
 import 'react-datepicker/dist/react-datepicker.css'
 // @ts-ignore
 import DatePicker from "react-datepicker/dist/react-datepicker";
+import {InputField} from "../../../components/InputField";
+import {validateRegisterNextStep} from "../../../tools/auth/register.role.validate";
+import {coachRegister} from "../../../store/actions/coach.action";
+import {useDispatch} from "react-redux";
+import {createPlayerValidator} from "../../../tools/private/player.validator";
+import {createPlayer} from "../../../store/actions/player.action";
 
-interface CreatePlayerFormInterface {
+
+export interface CreatePlayerFormInterface {
     name: string
     surname: string
-    fatherName: string
-    gameNumber: number
+    father_name: string
+    gender: "M" | "W"
+    game_number: number
     birth: string | number | readonly string[] | undefined
     nationality: string
-    placeOfBirth: string
+    place_of_birth: string
+    place_of_living: string
+    phone_number: string
     height: number
     position: string
     age: number
-    image: any
-    teamId: number
+    preview_img: any
+    training_time: number,
+    playing_time: number,
+    trauma?: string
+    mother_height?: number
+    father_height?: number
 }
 
 export const CreatePlayer: React.FC = () => {
-    const [disable] = useState<boolean>(false)
+    const toast = useToast()
+    const dispatch = useDispatch();
+    const [disable, setDisable] = useState<boolean>(false)
     const [form, setForm] = useState<CreatePlayerFormInterface>({
         name: "",
         surname: "",
-        fatherName: "",
-        gameNumber: 0,
+        father_name: "",
+        game_number: 0,
         birth: new Date().toLocaleDateString(),
         nationality: "",
-        placeOfBirth: "",
+        phone_number: "",
+        place_of_birth: "",
+        place_of_living: "",
         height: 170,
         position: '',
         age: 18,
-        teamId: 1,
-        image: []
+        gender: "M",
+        preview_img: [],
+        training_time: 0,
+        playing_time: 0,
+        trauma: "",
+        mother_height: 0,
+        father_height: 0,
     })
-    const dateHandler = (date:string) =>  setForm( state => ({ ...state,birth:  new Date(date).toLocaleDateString()}));
-
+    const dateHandler = (date: string) => setForm(state => ({...state, birth: new Date(date).toLocaleDateString()}));
     const inputHandler = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {name, value} = event.target
         setForm(state => ({
@@ -46,203 +68,81 @@ export const CreatePlayer: React.FC = () => {
             [name]: value
         }))
     }
+    const selectHandler = (event: ChangeEvent<HTMLSelectElement>) => {
+        const {name, value} = event.target
+        setForm(state => ({
+            ...state,
+            [name]: value
+        }))
+    };
     const imageUploaderHandler = (imageList: ImageListType) => setForm(state => ({
         ...state,
-        image: imageList as never[]
+        preview_img: imageList as never[]
     }));
     const submitHandler = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('submitHandler')
+        const error = createPlayerValidator(form);
+        if (error) {
+            toast({
+                title: "Ошибка",
+                position: "top",
+                description: error,
+                status: "error",
+                duration: 7000,
+                isClosable: true,
+            })
+        } else {
+            setDisable(() => true)
+            toast({
+                title: "Успешно",
+                position: "top",
+                description: "Отправляются данные на обработку",
+                status: "info",
+                duration: 7000,
+                isClosable: true,
+            })
+            dispatch(createPlayer(form, 22))
+            setDisable(() => false)
+        }
     }
     return (
         <>
-            <Block py={6} maxW={{md: "540ox", xs: "100%"}}>
+            <Block py={6} px={4} maxW={{md: "540ox", xs: "100%"}}>
                 <Text as={'h2'} fontWeight={600} textAlign={"center"} fontSize={"2rem"}>Форма Создания игрока</Text>
                 <form onSubmit={submitHandler}>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Имя
+                    <InputField onChange={inputHandler} value={form.name} label={"Имя игрока"} placeholder={"Имя"}
+                                name={"name"} type={"text"} disable={disable}/>
+
+                    <InputField onChange={inputHandler} value={form.surname} label={"Фамилия игрока"}
+                                placeholder={"Фамилия"}
+                                name={"surname"} type={"text"} disable={disable}/>
+                    <InputField onChange={inputHandler} value={form.father_name} label={"Отчество игрока"}
+                                placeholder={"Отчество игрока"}
+                                name={"father_name"} type={"text"} disable={disable}/>
+                    <Box py={4}>
+                        <Text mb="8px" textAlign="left">
+                            Дата рождения *
                         </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.name}
-                            name='name'
-                            onChange={inputHandler}
-                            placeholder="Введите Имя игрока"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
+                        <Box>
+                            <DatePicker
+                                value={form.birth}
+                                onChange={dateHandler}
+                                dropdownMode="select"
+                                showMonthDropdown
+                                showYearDropdown
+                                adjustDateOnChange
+                            />
+                        </Box>
+                        {/*/>*/}
                     </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Фамилия игрока
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.surname}
-                            name='surname'
-                            onChange={inputHandler}
-                            placeholder="Введите Фамилию игрока"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Отчество
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.fatherName}
-                            name='fatherName'
-                            onChange={inputHandler}
-                            placeholder="Введите Отчетсво игрока"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Национальность
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.nationality}
-                            name='nationality'
-                            onChange={inputHandler}
-                            placeholder="Национальность"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Рост см
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.height}
-                            name='height'
-                            type={'number'}
-                            onChange={inputHandler}
-                            placeholder="Рост см"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Возраст лет
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.age}
-                            name='height'
-                            type={'number'}
-                            onChange={inputHandler}
-                            placeholder="Возраст лет"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Позиция игрока
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.position}
-                            name='position'
-                            type={'text'}
-                            onChange={inputHandler}
-                            placeholder="Позиция"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
+
 
                     <Box p={4}>
                         <Text mb="8px">
-                            Игровой номер
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.gameNumber}
-                            name='gameNumber'
-                            onChange={inputHandler}
-                            placeholder="Введите Игровой номер игрока"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            День рождения!
-                        </Text>
-                        <DatePicker
-                            value={form.birth}
-                            onChange={dateHandler}
-                        />
-                        {/*<Input*/}
-                        {/*    as={}*/}
-                        {/*    variant="flushed"*/}
-                        {/*    value={form.birth}*/}
-                        {/*    onChange={dateHandler}*/}
-                        {/*    size="sm"*/}
-                        {/*    px={2}*/}
-                        {/*    isDisabled={disable}*/}
-                        {/*    required*/}
-                        {/*    _disabled={{*/}
-                        {/*        cursor: "not-allowed",*/}
-                        {/*    }}*/}
-                        {/*/>*/}
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Логотип команды
+                            Фотография игрока
                         </Text>
                         <ImageUploading
-                            value={form.image}
+                            value={form.preview_img}
                             onChange={imageUploaderHandler}
                             maxNumber={1}
                         >
@@ -259,12 +159,12 @@ export const CreatePlayer: React.FC = () => {
                                     h='320px'
                                     maxW='320px'
                                     flexDirection={'column'}>
-                                    {form.image.length
+                                    {form.preview_img.length
                                         ? <Button
                                             variant={"outline"}
                                             colorScheme={"red"}
                                             isDisabled={disable}
-                                            onClick={onImageRemoveAll}>Удалить Логотип</Button>
+                                            onClick={onImageRemoveAll}>Удалить фотографию</Button>
                                         : <Button
                                             colorScheme={"telegram"}
                                             onClick={onImageUpload}
@@ -275,7 +175,9 @@ export const CreatePlayer: React.FC = () => {
                                             h='100%'
                                             maxW='auto'
                                         >
-                                            Нажмите или перетащите сюда логотип
+                                            Нажмите или перетащите сюда
+                                                <br/>
+                                            фотографию игрока
                                         </Button>}
                                     {imageList.map((image, index) => (
                                         <Flex
@@ -297,6 +199,70 @@ export const CreatePlayer: React.FC = () => {
                             )}
                         </ImageUploading>
                     </Box>
+
+                    <InputField onChange={inputHandler} value={form.nationality} label={"Национальность игрока"}
+                                placeholder={"Национальность игрока"}
+                                name={"nationality"} type={"text"} disable={disable}/>
+
+                    <InputField onChange={inputHandler} value={form.height} label={"Рост игрока в см"}
+                                placeholder={"Рост см"}
+                                name={"height"} type={"number"} disable={disable}/>
+
+                    <InputField onChange={inputHandler} value={form.age} label={"Возраст лет"}
+                                placeholder={"Возраст лет"}
+                                name={"age"} type={"number"} disable={disable}/>
+
+                    <InputField onChange={inputHandler} value={form.place_of_birth} label={"Место рождения"}
+                                placeholder={"Место рождения"}
+                                name={"place_of_birth"} type={"text"} disable={disable}/>
+
+                    <InputField onChange={inputHandler} value={form.place_of_living} label={"Место жительства"}
+                                placeholder={"Место жительства"}
+                                name={"place_of_living"} type={"text"} disable={disable}/>
+
+                    <InputField onChange={inputHandler} value={form.position} label={"Позиция игрока"}
+                                placeholder={"Позиция игрока"}
+                                name={"position"} type={"text"} disable={disable}/>
+                    <InputField onChange={inputHandler} value={form.game_number} label={"Введите Игровой номер игрока"}
+                                placeholder={"Игровой номер"}
+                                name={"game_number"} type={"number"} disable={disable}/>
+                    <InputField onChange={inputHandler} value={form.playing_time} label={"Игровой стаж (лет)"}
+                                placeholder={"Игровой стаж"}
+                                name={"playing_time"} type={"number"} disable={disable}/>
+                    <InputField onChange={inputHandler} value={form.training_time} label={"Тренировочный стаж (лет)"}
+                                placeholder={"Тренировочный стаж"}
+                                name={"training_time"} type={"number"} disable={disable}/>
+                    <InputField onChange={inputHandler} value={form.phone_number} label={"Номер телефона для связи"}
+                                placeholder={"Номер телефона для связи"}
+                                name={"phone_number"} type={"number"} disable={disable}/>
+                    <Box>
+                        <Text>Выберете пол (поумолчанию мужчина)</Text>
+                        <Select placeholder="Пол"
+                                name={"gender"}
+                                defaultValue={"M"}
+                                onChange={selectHandler}
+                                mt={2}>
+                            <option value="M">Мужчина</option>
+                            <option value="W">Женщина</option>
+                        </Select>
+                    </Box>
+                    {form.age < 18 &&
+                    <Box>
+                        <Text>Информация о состоянии игрока молодежки</Text>
+
+                        <InputField onChange={inputHandler} value={form.father_height ?? ""} label={"Рост отца в см"}
+                                    placeholder={"Рост отца в см"}
+                                    name={"father_height"} type={"number"} disable={disable}/>
+
+                        <InputField onChange={inputHandler} value={form.mother_height ?? ""} label={"Рост матери в см"}
+                                    placeholder={"Рост матери  в см"}
+                                    name={"mother_height"} type={"number"} disable={disable}/>
+                        <InputField onChange={inputHandler} value={form.trauma ?? ""}
+                                    label={"Опишите травмы или потологии, если они имеются"}
+                                    placeholder={"Опишите травмы или потологии, если они имеются"}
+                                    name={"trauma"} type={"text"} disable={disable}/>
+                    </Box>
+                    }
                     <Flex justifyContent={"center"} alignItems={"center"}>
 
                         <Button variant={"outline"}
@@ -306,13 +272,6 @@ export const CreatePlayer: React.FC = () => {
                                 mx={2}
                         >
                             Подтвердить</Button>
-                        <Button variant={"outline"}
-                                colorScheme={"red"}
-                                isDisabled={disable}
-                                type={"reset"}
-                                mx={2}
-                        >
-                            Сбросить</Button>
                     </Flex>
                 </form>
             </Block>

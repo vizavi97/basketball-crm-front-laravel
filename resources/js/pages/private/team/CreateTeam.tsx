@@ -2,19 +2,13 @@ import React, {ChangeEvent, FormEvent, useState} from 'react'
 import {Block} from "../../../config/ui/Block";
 import {Box, Button, Flex, Input, Select, Text, Image} from "@chakra-ui/react";
 import ImageUploading, {ImageListType} from "react-images-uploading";
+import {InputField} from "../../../components/InputField";
 
 interface CreateTeamInterface {
 }
 
 interface CreateTeamFormInterface {
-    name: string
-    icon: any
-    gender: 'women' | 'men' | '' | string
-    type: '5x5' | '3x3' | '' | string
-    address: string,
-    age: "U16" | "U18" | "OLDER" | "" | string
-    sectionImage: any
-    sectionAddress: string
+
 }
 
 interface SelectTeamFormInterface {
@@ -65,19 +59,19 @@ const ageArr = [
 export const CreateTeam: React.FC<CreateTeamInterface> = () => {
     const [disable, setDisable] = useState<boolean>(false)
     const [form, setForm] = useState<CreateTeamFormInterface>({
-        name: "",
-        address: "",
-        gender: "",
-        type: "",
-        age: "",
-        icon: [],
-        sectionImage: [],
-        sectionAddress: ""
     })
     const inputHandler = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {name, value} = event.target
         setForm(state => ({...state,[name]: value}))
     }
+
+    const selectHandler = (event: ChangeEvent<HTMLSelectElement>) => {
+        const {name, value} = event.target
+        setForm(state => ({
+            ...state,
+                [name]: value
+        }))
+    };
     const imageUploaderHandler = (imageList: ImageListType) => setForm(state => ({
         ...state,
         icon: imageList as never[]
@@ -86,182 +80,49 @@ export const CreateTeam: React.FC<CreateTeamInterface> = () => {
         event.preventDefault();
         console.log('submitHandler')
     }
+
     return (
         <>
             <Block py={6} maxW={{md: "540ox", xs: "100%"}}>
                 <Text as={'h2'} fontWeight={600} textAlign={"center"} fontSize={"2rem"}>Форма создания команды</Text>
-                <form onSubmit={submitHandler}>
-                    {/*name*/}
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Название команды
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.name}
-                            name='name'
-                            onChange={inputHandler}
-                            placeholder="Введите название команды"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    {/*address*/}
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Адрес команды (Область или Город, Поселок или населеный пункт, Улица, Строение )
-                        </Text>
-                        <Input
-                            variant="flushed"
-                            value={form.address}
-                            name='address'
-                            onChange={inputHandler}
-                            placeholder="Введите название команды"
-                            size="sm"
-                            px={2}
-                            isDisabled={disable}
-                            required
-                            _disabled={{
-                                cursor: "not-allowed",
-                            }}
-                        />
-                    </Box>
-                    {/*Age Group*/}
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Возрастная группа команды
-                        </Text>
-                        <Select
-                            variant="flushed"
-                            name='age'
-                            px={2}
-                            value={form.age}
-                            onChange={inputHandler}
-                            required
-                            placeholder="Выберете возрастную группа команды"
-                        >
-                            {typeArr.map((item, key: number) => <option key={key}
-                                                                        value={item.type}>{item.title}</option>)}
-                        </Select>
-                    </Box>
-                    {/*Type team*/}
-                    <Box p={4}>
-                        <Text mb="8px">
-                            тип команды
-                        </Text>
-                        <Select
-                            variant="flushed"
-                            name='type'
-                            px={2}
-                            value={form.type}
-                            onChange={inputHandler}
-                            required
-                            placeholder="Выберете тип  команды"
-                        >
-                            {typeArr.map((item, key: number) => <option key={key}
-                                                                        value={item.type}>{item.title}</option>)}
-                        </Select>
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Пол команды
-                        </Text>
-                        <Select
-                            variant="flushed"
-                            name='gender'
-                            px={2}
-                            value={form.gender}
-                            onChange={inputHandler}
-                            required
-                            placeholder="Выберете пол команды"
-                        >
-                            {genderArr.map((item, key: number) => <option key={key}
-                                                                          value={item.gender}>{item.title}</option>)}
-                        </Select>
-                    </Box>
-                    <Box p={4}>
-                        <Text mb="8px">
-                            Логотип команды
-                        </Text>
-                        <ImageUploading
-                            value={form.icon}
-                            onChange={imageUploaderHandler}
-                            maxNumber={1}
-                        >
-                            {({
-                                  imageList,
-                                  onImageUpload,
-                                  onImageRemoveAll,
-                                  isDragging,
-                                  dragProps
-                              }) => (
-                                // write your building UI
-                                <Flex
-                                    w='100%'
-                                    h='320px'
-                                    maxW='320px'
-                                    flexDirection={'column'}>
-                                    {form.icon.length
-                                        ? <Button
-                                            variant={"outline"}
-                                            colorScheme={"red"}
-                                            isDisabled={disable}
-                                            onClick={onImageRemoveAll}>Удалить Логотип</Button>
-                                        : <Button
-                                            colorScheme={"telegram"}
-                                            onClick={onImageUpload}
-                                            {...dragProps}
-                                            variant={isDragging ? "ghost" : "outline"}
-                                            isDisabled={disable}
-                                            w='100%'
-                                            h='100%'
-                                            maxW='auto'
-                                        >
-                                            Нажмите или перетащите сюда логотип
-                                        </Button>}
-                                    {imageList.map((image, index) => (
-                                        <Flex
-                                            justifyContent={"center"}
-                                            alignItems={"center"}
-                                            mt={4}
-                                            w='100%'
-                                            h='100%'
-                                            border={'1px solid #007ab8'}
-                                            p={'1.5rem'}
-                                            key={index}
-                                            borderRadius={'.625rem'}>
-                                            <Box>
-                                                <Image src={image.dataURL}/>
-                                            </Box>
-                                        </Flex>
-                                    ))}
-                                </Flex>
-                            )}
-                        </ImageUploading>
-                    </Box>
-                    <Flex justifyContent={"center"} alignItems={"center"}>
+                {/*<form onSubmit={submitHandler}>*/}
+                {/*    <InputField onChange={inputHandler} value={form.info.name} label={"Имя"} placeholder={"Имя"} name={"name"}*/}
+                {/*                type={"text"} disable={disable}/>*/}
+                {/*    <InputField onChange={inputHandler} value={form.info.surname} label={"Фамилия"} placeholder={"Фамилия"}*/}
+                {/*                name={"surname"} type={"text"} disable={disable}/>*/}
+                {/*    <InputField onChange={inputHandler} value={form.info.living_address} label={"Место проживания"}*/}
+                {/*                placeholder={"Место проживания"} name={"living_address"} type={"text"} disable={disable}/>*/}
+                {/*    <InputField onChange={inputHandler} value={form.info.working_address} label={"Место работы"}*/}
+                {/*                placeholder={"Место работы"} name={"working_address"} type={"text"} disable={disable}/>*/}
+                {/*    <InputField onChange={inputHandler} value={form.info.nationality} label={"Национальность"}*/}
+                {/*                placeholder={"Национальность"} name={"nationality"} type={"text"} disable={disable}/>*/}
+                {/*    <Select placeholder="Владение компьютером *"*/}
+                {/*            name={"pc_quality"}*/}
+                {/*            onChange={selectHandler}*/}
+                {/*            mt={2}>*/}
+                {/*        <option value="h">Высокий (Полностью понимаю)</option>*/}
+                {/*        <option value="m">Средний (Знаю азы - Word, excel, и другие основные программы)</option>*/}
+                {/*        <option value="l">Низкий (Знаю как включать)</option>*/}
+                {/*        <option value="n">Никогда не пользовался</option>*/}
+                {/*    </Select>*/}
+                {/*    <Flex justifyContent={"center"} alignItems={"center"}>*/}
 
-                        <Button variant={"outline"}
-                                colorScheme={"teal"}
-                                isDisabled={disable}
-                                type={"submit"}
-                                mx={2}
-                        >
-                            Подтвердить</Button>
-                        <Button variant={"outline"}
-                                colorScheme={"red"}
-                                isDisabled={disable}
-                                type={"reset"}
-                                mx={2}
-                        >
-                            Сбросить</Button>
-                    </Flex>
-                </form>
+                {/*        <Button variant={"outline"}*/}
+                {/*                colorScheme={"teal"}*/}
+                {/*                isDisabled={disable}*/}
+                {/*                type={"submit"}*/}
+                {/*                mx={2}*/}
+                {/*        >*/}
+                {/*            Подтвердить</Button>*/}
+                {/*        <Button variant={"outline"}*/}
+                {/*                colorScheme={"red"}*/}
+                {/*                isDisabled={disable}*/}
+                {/*                type={"reset"}*/}
+                {/*                mx={2}*/}
+                {/*        >*/}
+                {/*            Сбросить</Button>*/}
+                {/*    </Flex>*/}
+                {/*</form>*/}
             </Block>
         </>
     )

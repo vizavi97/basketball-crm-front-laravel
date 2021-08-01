@@ -12,6 +12,7 @@ import {
 import {BACKEND_API_URL} from "../../config/app.config";
 import axios from "axios";
 import {CoachSettingsInterface} from "../../pages/private/settings/Settings";
+import {GET_COACH_PROFILE} from "../types/coach.types";
 
 export const register = (params: RegisterParamsInterface) => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface>>) => {
     await axios.post(`${BACKEND_API_URL}signup`, {
@@ -81,7 +82,7 @@ export const login = (params: LoginParamsInterface) => async (dispatch: Dispatch
 }
 
 
-export const meQuery = () => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface | UserLoadingDispatchInterface>>) => {
+export const meQuery = () => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface | UserLoadingDispatchInterface | any>>) => {
     dispatch({
         type: LOADING_USER,
         payload: {
@@ -90,10 +91,8 @@ export const meQuery = () => async (dispatch: Dispatch<DispatchEvent<UserDispatc
     })
 
     if (localStorage.getItem('token')) {
-        await axios.get(`${BACKEND_API_URL}profile`, {
-            headers: {
-                "Authorization": `${localStorage.getItem('token')}`
-            }
+        await axios.post(`${BACKEND_API_URL}profile`, {
+         token: localStorage.getItem('token')
         })
             .then((resp) => {
                 dispatch({
@@ -106,6 +105,14 @@ export const meQuery = () => async (dispatch: Dispatch<DispatchEvent<UserDispatc
                         error: false
                     }
                 })
+                if(resp.data.user.role === "coach") {
+                    dispatch({
+                        type: GET_COACH_PROFILE,
+                        payload: {
+                            coach: resp.data.coach,
+                        }
+                    })
+                }
             })
             .catch(error => {
                 dispatch({

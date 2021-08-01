@@ -42,7 +42,7 @@ function App() {
         return (<PreLoader/>)
     }
     if(user) {
-        if(user.is_activated) {
+        if(user.is_activated && user.role === "coach") {
             return (
                 <BrowserRouter>
                     <CabinetLayout>
