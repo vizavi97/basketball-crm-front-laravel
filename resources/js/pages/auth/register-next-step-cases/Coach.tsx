@@ -1,18 +1,21 @@
 import React, {ChangeEvent, FormEvent, useState} from 'react'
 import {Box, Button, Flex, Image, Input, Select, Text, useToast} from "@chakra-ui/react";
-import {useDispatch} from "react-redux";
-import {validateRegisterNextStep} from "../../../tools/auth/login.validate";
+import {validateRegisterNextStep} from "../../../tools/auth/register.role.validate";
 import {CoachRegisterInterface, RegisterNextStepInterface} from "../types/RegisterNextStep";
 import {InputField} from "../../../components/InputField";
 import ImageUploading, {ImageListType} from "react-images-uploading";
 import 'react-datepicker/dist/react-datepicker.css'
 // @ts-ignore
 import DatePicker from "react-datepicker/dist/react-datepicker";
+import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
+import {coachRegister} from "../../../store/actions/coach.action";
 
 interface CoachInterface {role: string}
 
 export const Coach: React.FC<CoachInterface> = ({role}) => {
     const toast = useToast()
+    const dispatch = useDispatch();
+    const {user} = useSelector((state:RootStateOrAny) => state.user)
     const [disable, setDisable] = useState<boolean>(false);
     const [form, setForm] = useState<RegisterNextStepInterface<CoachRegisterInterface>>({
         role: role,
@@ -59,7 +62,6 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
     };
     const submitHandler = async (event: FormEvent) => {
         event.preventDefault();
-        console.log(form)
         const error = validateRegisterNextStep(form.info, role);
         if (error) {
             toast({
@@ -72,6 +74,15 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
             })
         } else {
             setDisable(() => true)
+            toast({
+                title: "Успешно",
+                position: "top",
+                description: "Отправляются данные на обработку",
+                status: "info",
+                duration: 7000,
+                isClosable: true,
+            })
+            dispatch(coachRegister(form.info, String(user.id)))
             setDisable(() => false)
         }
     };
@@ -94,7 +105,12 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                         placeholder={"Место проживания"} name={"living_address"} type={"text"} disable={disable}/>
             <InputField onChange={inputHandler} value={form.info.working_address} label={"Место работы"}
                         placeholder={"Место работы"} name={"working_address"} type={"text"} disable={disable}/>
-            <Select placeholder="Владение компьютером *" name={"position"} onChange={selectHandler} mt={2}>
+            <InputField onChange={inputHandler} value={form.info.nationality} label={"Национальность"}
+                        placeholder={"Национальность"} name={"nationality"} type={"text"} disable={disable}/>
+            <Select placeholder="Владение компьютером *"
+                    name={"pc_quality"}
+                    onChange={selectHandler}
+                    mt={2}>
                 <option value="h">Высокий (Полностью понимаю)</option>
                 <option value="m">Средний (Знаю азы - Word, excel, и другие основные программы)</option>
                 <option value="l">Низкий (Знаю как включать)</option>

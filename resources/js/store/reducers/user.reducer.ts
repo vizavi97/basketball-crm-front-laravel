@@ -1,6 +1,14 @@
 import {DispatchEvent} from "../redux";
 import {UserStateInterface} from "../interfaces/user";
-import {CHANGE_USER_PROFILE, LOADING_USER, LOGIN_USER, LOGOUT_USER, ME_QUERY, REGISTER_USER} from "../types/user.types";
+import {
+    ACTIVATE_USER,
+    CHANGE_USER_PROFILE,
+    LOADING_USER,
+    LOGIN_USER,
+    LOGOUT_USER,
+    ME_QUERY,
+    REGISTER_USER
+} from "../types/user.types";
 
 
 const initialState = {
@@ -67,7 +75,14 @@ export const userReducer = (state = initialState, action: DispatchEvent<any>) =>
                 loader: payload.loader,
                 renderCounter: 0
             }
-
+        case ACTIVATE_USER:
+            return {
+                ...state,
+                user: {
+                    ...state.user as {},
+                    is_activated: true
+                }
+            }
         default:
             return state
     }

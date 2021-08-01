@@ -114,7 +114,7 @@ export const meQuery = () => async (dispatch: Dispatch<DispatchEvent<UserDispatc
                         user:  null,
                         token: null,
                         loader: false,
-                        message: 'Ваша сессия устарела пожэалуйста авторизуйтесь!!',
+                        message: 'Ваша сессия устарела пожалуйста авторизуйтесь!!',
                         error: true
                     }
                 })
