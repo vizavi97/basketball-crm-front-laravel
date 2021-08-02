@@ -18,7 +18,7 @@ export const teamReducer = (state = initialState, action: DispatchEvent<any>) =>
         case CREATE_TEAM:
             return  {
                 ...state,
-                teams: [...state.teams,...payload.teams]
+                teams: [...state.teams, payload.teams]
             }
         case GET_TEAMS:
             return  {

@@ -17,7 +17,7 @@ export const playerReducer = (state = initialState, action: DispatchEvent<any>) 
         case CREATE_PLAYER:
             return  {
                 ...state,
-                players: [...state.players,...payload.players]
+                players: [...state.players, payload.players]
             }
         case GET_PLAYERS:
             return  {

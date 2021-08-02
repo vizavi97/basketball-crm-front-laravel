@@ -28,7 +28,7 @@ export const createTeam = (params: SelectTeamFormInterface, coach_id: string | n
             dispatch({
                 type: CREATE_TEAM,
                 payload: {
-                    teams: resp.data.team
+                    teams: resp.data.teams
                 }
             })
         })
