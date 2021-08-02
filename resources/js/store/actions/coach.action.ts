@@ -42,24 +42,4 @@ export const coachRegister = (params: CoachRegisterInterface,user_id: string) =>
             }
         })
         .catch(resp => console.log("reso", resp))
-
-}
-
-
-export const getCoachInfo = (params: CoachRegisterInterface,user_id: string) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
-
-    await axios.post(`${BACKEND_API_URL}get-coach-profile`, {
-        token: localStorage.getItem('token')
-        }
-    )
-        .then(resp => {
-            dispatch({
-                type: GET_COACH_PROFILE,
-                payload: {
-                    coach: resp.data.coach
-                }
-            })
-        })
-        .catch(resp => console.log("reso", resp))
-
 }

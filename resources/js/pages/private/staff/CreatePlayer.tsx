@@ -8,12 +8,13 @@ import DatePicker from "react-datepicker/dist/react-datepicker";
 import {InputField} from "../../../components/InputField";
 import {validateRegisterNextStep} from "../../../tools/auth/register.role.validate";
 import {coachRegister} from "../../../store/actions/coach.action";
-import {useDispatch} from "react-redux";
+import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
 import {createPlayerValidator} from "../../../tools/private/player.validator";
 import {createPlayer} from "../../../store/actions/player.action";
 
 
 export interface CreatePlayerFormInterface {
+    id?: string
     name: string
     surname: string
     father_name: string
@@ -37,6 +38,7 @@ export interface CreatePlayerFormInterface {
 
 export const CreatePlayer: React.FC = () => {
     const toast = useToast()
+    const {coach} = useSelector((state:RootStateOrAny) => state.coach)
     const dispatch = useDispatch();
     const [disable, setDisable] = useState<boolean>(false)
     const [form, setForm] = useState<CreatePlayerFormInterface>({
@@ -101,7 +103,7 @@ export const CreatePlayer: React.FC = () => {
                 duration: 7000,
                 isClosable: true,
             })
-            dispatch(createPlayer(form, 22))
+            dispatch(createPlayer(form, coach.id))
             setDisable(() => false)
         }
     }

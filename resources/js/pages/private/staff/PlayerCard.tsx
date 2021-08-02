@@ -1,13 +1,16 @@
 import React from 'react'
 import {Block} from "../../../config/ui/Block";
 import {Box, Button, Flex, GridItem, Image, Text} from "@chakra-ui/react";
+import {useDispatch} from "react-redux";
+import {deletePlayer} from "../../../store/actions/player.action";
 
 export interface PlayerCardInterface {
     icon: string,
     name: string,
     surname: string,
     number: number | string,
-    position: string
+    position: string,
+    id: number | string
 }
 
 export const PlayerCard: React.FC<PlayerCardInterface> = ({
@@ -15,8 +18,10 @@ export const PlayerCard: React.FC<PlayerCardInterface> = ({
                                                               name,
                                                               surname,
                                                               number,
-                                                              position
+                                                              position,
+                                                              id
                                                           }) => {
+    const dispatch = useDispatch();
     return (
         <>
             <GridItem colSpan={1}>
@@ -32,11 +37,11 @@ export const PlayerCard: React.FC<PlayerCardInterface> = ({
                             <Text>Позиция: {position}</Text>
                         </Box>
                         <Flex justifyContent={"center"} pb={4}>
-                            <Button colorScheme='red' mx={2}>
+                            <Button colorScheme='red'
+                                    mx={2}
+                                    onClick={() => dispatch(deletePlayer(id))}
+                            >
                                 Удалить
-                            </Button>
-                            <Button colorScheme='teal' mx={2}>
-                                Изменить
                             </Button>
                         </Flex>
                     </Flex>

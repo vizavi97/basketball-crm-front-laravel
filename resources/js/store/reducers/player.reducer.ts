@@ -1,6 +1,6 @@
 import {DispatchEvent} from "../redux";
 import {PlayerDefaultStateInterface, PlayerFieldsInterface} from "../interfaces/player";
-import {CREATE_PLAYER} from "../types/player.types";
+import {CREATE_PLAYER, DELETE_PLAYER, GET_PLAYERS, LOADING_PLAYERS} from "../types/player.types";
 
 
 
@@ -20,6 +20,21 @@ export const playerReducer = (state = initialState, action: DispatchEvent<any>) 
                 players: state.players.push(
                     payload.player as PlayerFieldsInterface as never
                 )
+            }
+        case GET_PLAYERS:
+            return  {
+                ...state,
+                players: payload.players
+            }
+        case LOADING_PLAYERS:
+            return  {
+                ...state,
+                loader: payload.loader
+            }
+        case DELETE_PLAYER:
+            return  {
+                ...state,
+                players: state.players.filter(item => payload.id !== item.id)
             }
         default:
             return state
