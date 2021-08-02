@@ -25,6 +25,8 @@ import {Block} from "../../../config/ui/Block";
 import {RouterLinks} from "./RouterLinks";
 import {withRouter} from "react-router-dom";
 import logo from "../../../assets/images/logo.png";
+import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
+import {logOutUser} from "../../../store/actions/user.action";
 
 interface TopBarInterface {
     history: any
@@ -34,6 +36,9 @@ const TopBar: React.FC<TopBarInterface> = ({history}) => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     history.listen(() => onClose());
     const {colorMode, toggleColorMode} = useColorMode();
+    const {coach} = useSelector((state: RootStateOrAny) => state)
+    const dispatch = useDispatch();
+
     return (
         <>
             <Block>
@@ -80,12 +85,14 @@ const TopBar: React.FC<TopBarInterface> = ({history}) => {
                                             <Avatar h={{base: '48px', md: "42px"}} w={{base: '48px', md: "42px"}}
                                                     mr={{base: "0", md: '1.125rem'}} name="Dan Abrahmov"
                                                     src="https://bit.ly/dan-abramov"/>
-                                            <Text d={{base: 'none', md: 'block'}}>Dan Abrahmov</Text>
+                                            <Text d={{
+                                                base: 'none',
+                                                md: 'block'
+                                            }}>{coach.coach ? coach.coach.name + " " + coach.coach.name : null}</Text>
                                         </Flex>
                                     </MenuButton>
                                     <MenuList right={0}>
-                                        <MenuItem>Download</MenuItem>
-                                        <MenuItem onClick={() => alert("Kagebunshin")}>Create a Copy</MenuItem>
+                                        <MenuItem onClick={() => dispatch(logOutUser())}>Выйти</MenuItem>
                                     </MenuList>
                                 </>
                             )}

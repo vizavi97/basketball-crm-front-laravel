@@ -1,15 +1,15 @@
 import {Dispatch} from "react";
 import {DispatchEvent} from "../redux";
-import {CreatePlayerFormInterface} from "../../pages/private/staff/CreatePlayer";
 import axios from "axios";
 import {BACKEND_API_URL} from "../../config/app.config";
-import {CREATE_PLAYER, DELETE_PLAYER, GET_PLAYERS, LOADING_PLAYERS} from "../types/player.types";
+import {SelectTeamFormInterface} from "../../pages/private/team/CreateTeam";
+import {CREATE_TEAM, DELETE_TEAM, GET_TEAMS, LOADING_TEAMS} from "../types/team.types";
 
-export const createPlayer = (params: CreatePlayerFormInterface, coach_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
+export const createTeam = (params: SelectTeamFormInterface, coach_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
     const formData = new FormData();
     Object.entries(params).forEach(
         ([key, value]) => {
-            if (key === "preview_img") {
+            if (key === "preview_img" || key === "section_preview_img") {
                 formData.append(key, value[0].file)
             } else {
                 formData.append(key, value)
@@ -17,7 +17,7 @@ export const createPlayer = (params: CreatePlayerFormInterface, coach_id: string
         }
     );
     formData.append("coach_id", String(coach_id))
-    await axios.post(`${BACKEND_API_URL}player/create`, formData,
+    await axios.post(`${BACKEND_API_URL}team/create`, formData,
         {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -25,68 +25,67 @@ export const createPlayer = (params: CreatePlayerFormInterface, coach_id: string
         }
     )
         .then(resp => {
-            console.log(resp.data)
             dispatch({
-                type: CREATE_PLAYER,
+                type: CREATE_TEAM,
                 payload: {
-                    players: resp.data.player
+                    teams: resp.data.team
                 }
             })
         })
         .catch(error => console.log("error", error))
 }
-export const getPlayers = (coach_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
+export const getTeams = (coach_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
     dispatch({
-        type: LOADING_PLAYERS,
+        type: LOADING_TEAMS,
         payload: {
             loader: true
         }
     })
-    await axios.post(`${BACKEND_API_URL}player/get-players`, {
+    await axios.post(`${BACKEND_API_URL}team/get-teams`, {
             coach_id
         }
     )
         .then(resp => {
             dispatch({
-                type: GET_PLAYERS,
+                type: GET_TEAMS,
                 payload: {
-                    players: resp.data.players
+                    teams: resp.data.teams
                 }
             })
         })
         .catch(resp => console.log("reso", resp))
         .finally(() =>
             dispatch({
-                type: LOADING_PLAYERS,
+                type: LOADING_TEAMS,
                 payload: {
                     loader: false
                 }
             }))
 }
-export const deletePlayer = (player_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
-    if (player_id) {
+export const deleteTeam = (team_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
+    if (team_id) {
         dispatch({
-            type: LOADING_PLAYERS,
+            type: LOADING_TEAMS,
             payload: {
                 loader: true
             }
         })
-        await axios.post(`${BACKEND_API_URL}player/delete`, {
-                id: player_id
+        await axios.post(`${BACKEND_API_URL}team/delete`, {
+                id: team_id
             }
         )
             .then(resp => {
                 dispatch({
-                    type: DELETE_PLAYER,
+                    type: DELETE_TEAM,
                     payload: {
-                        id: player_id
+                        id: team_id
                     }
                 })
             })
             .catch(resp => console.log("reso", resp))
             .finally(() =>
                 dispatch({
-                    type: LOADING_PLAYERS,
+                    type: LOADING_TEAMS,
                     payload: {
                         loader: false
                     }

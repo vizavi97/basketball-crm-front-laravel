@@ -49,7 +49,7 @@ export const register = (params: RegisterParamsInterface) => async (dispatch: Di
         })
 }
 
-export const login = (params: LoginParamsInterface) => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface>>) => {
+export const login = (params: LoginParamsInterface) => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface | any>>) => {
     await axios.post(`${BACKEND_API_URL}login`, {
         email: params.email,
         password: params.password,
@@ -66,6 +66,14 @@ export const login = (params: LoginParamsInterface) => async (dispatch: Dispatch
                     error: false
                 }
             })
+            if(resp.data.user.role === "coach") {
+                dispatch({
+                    type: GET_COACH_PROFILE,
+                    payload: {
+                        coach: resp.data.coach,
+                    }
+                })
+            }
         })
         .catch(error => {
             dispatch({

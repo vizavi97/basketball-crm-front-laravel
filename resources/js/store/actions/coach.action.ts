@@ -3,7 +3,7 @@ import {DispatchEvent} from "../redux";
 import {BACKEND_API_URL} from "../../config/app.config";
 import axios from "axios";
 import {CoachRegisterInterface} from "../../pages/auth/types/RegisterNextStep";
-import {ACTIVATE_USER, REGISTER_USER} from "../types/user.types";
+import {ACTIVATE_USER, LOGIN_USER, REGISTER_USER} from "../types/user.types";
 import {GET_COACH_PROFILE} from "../types/coach.types";
 
 export const coachRegister = (params: CoachRegisterInterface,user_id: string) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
@@ -24,8 +24,9 @@ export const coachRegister = (params: CoachRegisterInterface,user_id: string) =>
     formData.append("certificate_file", params.certificate_file[0].file)
     formData.append("categories_file", params.categories_file[0].file)
     formData.append("international_file", params.international_file[0].file)
-    formData.append("other_files", params.other_files[0].file)
-
+    if (params.other_files.length) {
+        formData.append("other_files", params.other_files[0].file)
+    }
     await axios.post(`${BACKEND_API_URL}coach-register`,formData,
         {
             headers: {
@@ -36,8 +37,15 @@ export const coachRegister = (params: CoachRegisterInterface,user_id: string) =>
         .then(resp => {
             if(resp.data.is_activated) {
                 dispatch({
-                    type: ACTIVATE_USER,
-                    payload: {}
+                    type: LOGIN_USER,
+                    payload: {
+                        user: {...resp.data.user, role: resp.data.user.groups[0].code},
+                        token: localStorage.getItem('token'),
+                        loader: false,
+                        error: false,
+                        message: "Добро пожаловать Тренер",
+                        renderCounter: 1
+                    }
                 })
             }
         })

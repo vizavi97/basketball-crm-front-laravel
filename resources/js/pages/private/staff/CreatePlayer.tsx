@@ -6,12 +6,13 @@ import 'react-datepicker/dist/react-datepicker.css'
 // @ts-ignore
 import DatePicker from "react-datepicker/dist/react-datepicker";
 import {InputField} from "../../../components/InputField";
-import {validateRegisterNextStep} from "../../../tools/auth/register.role.validate";
-import {coachRegister} from "../../../store/actions/coach.action";
 import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
 import {createPlayerValidator} from "../../../tools/private/player.validator";
 import {createPlayer} from "../../../store/actions/player.action";
 
+interface CreatePlayerInterface {
+    logout: any
+}
 
 export interface CreatePlayerFormInterface {
     id?: string
@@ -36,7 +37,7 @@ export interface CreatePlayerFormInterface {
     father_height?: number
 }
 
-export const CreatePlayer: React.FC = () => {
+export const CreatePlayer: React.FC<CreatePlayerInterface> = ({logout}) => {
     const toast = useToast()
     const {coach} = useSelector((state:RootStateOrAny) => state.coach)
     const dispatch = useDispatch();
@@ -105,6 +106,7 @@ export const CreatePlayer: React.FC = () => {
             })
             dispatch(createPlayer(form, coach.id))
             setDisable(() => false)
+            logout();
         }
     }
     return (
@@ -265,15 +267,14 @@ export const CreatePlayer: React.FC = () => {
                                     name={"trauma"} type={"text"} disable={disable}/>
                     </Box>
                     }
-                    <Flex justifyContent={"center"} alignItems={"center"}>
+                    <Flex justifyContent={"center"} alignItems={"center"} pt={4}>
 
                         <Button variant={"outline"}
                                 colorScheme={"teal"}
                                 isDisabled={disable}
                                 type={"submit"}
                                 mx={2}
-                        >
-                            Подтвердить</Button>
+                        >Подтвердить и выйти</Button>
                     </Flex>
                 </form>
             </Block>

@@ -1,22 +1,23 @@
-import React from 'react'
+import React, {MouseEventHandler} from 'react'
 import {Box, Text, Link, useColorMode} from '@chakra-ui/react';
-import {Link as RouterLink, useHistory} from 'react-router-dom'
+import {Link as RouterLink} from 'react-router-dom'
 
 interface LinkInterface {
     name: string,
     path: string,
+    history_path :string
+    onClick: MouseEventHandler<HTMLAnchorElement>
 }
 
 export const SideLink: React.FC<LinkInterface> = ({
                                                   children,
                                                   name,
-                                                  path
+                                                  path,
+    history_path,
+    onClick
                                               }) => {
     const {colorMode} = useColorMode();
-    const history = useHistory()
-    const pathname = history.location.pathname;
     const iconColor = colorMode === 'light' ? "#1C273C" : "#fff"
-
     return (
         <Link as={RouterLink} to={path}
               fontSize='1rem'
@@ -25,14 +26,15 @@ export const SideLink: React.FC<LinkInterface> = ({
               alignItems='center'
               py='.875rem'
               _hover={{
-                  color: '#36AB7E',
-                  "& path": {fill: '#36AB7E!important'}
+                  color: '#dc1f23',
+                  "& path": {fill: '#dc1f23!important'}
               }}
               sx={{
-                  color: pathname === path ? "#36AB7E" : iconColor,
-                  "& path": {fill: pathname === path ? "#36AB7E" : iconColor}
+                  color: history_path === path ? "#dc1f23" : iconColor,
+                  "& path": {fill: history_path === path ? "#dc1f23" : iconColor}
               }}
               _focus={{}}
+              onClick={onClick}
         >
             <Box w={5}>
                 {children}

@@ -1,38 +1,39 @@
 import {DispatchEvent} from "../redux";
-import {PlayerDefaultStateInterface} from "../interfaces/player";
 import {CREATE_PLAYER, DELETE_PLAYER, GET_PLAYERS, LOADING_PLAYERS} from "../types/player.types";
+import {TeamDefaultStateInterface} from "../interfaces/team";
+import {CREATE_TEAM, DELETE_TEAM, GET_TEAMS, LOADING_TEAMS} from "../types/team.types";
 
 
 
 const initialState = {
-    players: [],
+    teams: [],
     loader: false,
     error: false,
     message: '',
-} as PlayerDefaultStateInterface
+} as TeamDefaultStateInterface
 
-export const playerReducer = (state = initialState, action: DispatchEvent<any>) => {
+export const teamReducer = (state = initialState, action: DispatchEvent<any>) => {
     const {type, payload} = action
     switch (type) {
-        case CREATE_PLAYER:
+        case CREATE_TEAM:
             return  {
                 ...state,
-                players: [...state.players,...payload.players]
+                teams: [...state.teams,...payload.teams]
             }
-        case GET_PLAYERS:
+        case GET_TEAMS:
             return  {
                 ...state,
-                players: payload.players
+                teams: payload.teams
             }
-        case LOADING_PLAYERS:
+        case LOADING_TEAMS:
             return  {
                 ...state,
                 loader: payload.loader
             }
-        case DELETE_PLAYER:
+        case DELETE_TEAM:
             return  {
                 ...state,
-                players: state.players.filter(item => payload.id !== item.id)
+                teams: state.teams.filter(item => payload.id !== item.id)
             }
         default:
             return state

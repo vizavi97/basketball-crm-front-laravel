@@ -3,17 +3,12 @@ import {Button, Flex, Grid} from "@chakra-ui/react";
 import {PlayerCard} from "./PlayerCard";
 import {SkeletonStack} from "../../../components/ui/skeleton/SkeletonStack";
 import {CreatePlayer, CreatePlayerFormInterface} from "./CreatePlayer";
-import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
-import {getPlayers} from "../../../store/actions/player.action";
+import {RootStateOrAny, useSelector} from "react-redux";
 
 
 export const Staff: React.FC = () => {
-    const {coach, player} = useSelector((state: RootStateOrAny) => state)
-    const dispatch = useDispatch();
+    const {player} = useSelector((state: RootStateOrAny) => state)
     const [create, setCreate] = useState<boolean>(false)
-    useEffect(() => {
-        dispatch(getPlayers(coach.coach.id))
-    }, [])
     return (
         <>
             <Flex mb={4} justifyContent={"flex-end"}>
@@ -23,7 +18,7 @@ export const Staff: React.FC = () => {
                 </Button>
             </Flex>
             {create
-                ? <CreatePlayer/>
+                ? <CreatePlayer logout={() => setCreate(prevState => !prevState)}/>
                 : <Grid
                     templateColumns={{base: 'repeat(1, 1fr)', md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)"}}
                     gap={6}>
@@ -34,7 +29,8 @@ export const Staff: React.FC = () => {
                                 key={key}
                                 id={item.id ?? ""}
                                 icon={item.preview_img.path}
-                                name={item.name} surname={item.surname} number={item.game_number} position={item.position}/>) : null
+                                name={item.name} surname={item.surname} number={item.game_number}
+                                position={item.position}/>) : null
                     }
                 </Grid>
             }

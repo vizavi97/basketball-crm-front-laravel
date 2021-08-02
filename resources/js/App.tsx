@@ -6,7 +6,6 @@ import {CabinetLayout} from "./components/layout/cabinet/CabinetLayout";
 import {Staff} from "./pages/private/staff/Staff";
 import {Teams} from "./pages/private/team/Teams";
 import {Settings} from "./pages/private/settings/Settings";
-import {SportSection} from "./pages/private/sport-section/SportSection";
 import {PreLoader} from "./components/PreLoader";
 import {meQuery} from "./store/actions/user.action";
 import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
@@ -16,6 +15,7 @@ import {Register} from "./pages/auth/Register";
 import {RestorePassword} from "./pages/auth/RestorePassword";
 import {RestorePasswordField} from "./pages/auth/RestorePasswordField";
 import {RegisterNextStep} from "./pages/auth/RegisterNextStep";
+import {CoachLayout} from "./components/layout/cabinet/CoachLayout";
 
 
 function App() {
@@ -37,6 +37,7 @@ function App() {
             })
         }
     }, [renderCounter, toast, error, message]);
+    console.log(user)
 
     if (loader) {
         return (<PreLoader/>)
@@ -45,15 +46,14 @@ function App() {
         if(user.is_activated && user.role === "coach") {
             return (
                 <BrowserRouter>
-                    <CabinetLayout>
+                    <CoachLayout>
                         <Switch>
                             <Route exact path='/' component={Main}/>
                             <Route path='/staff' component={Staff}/>
                             <Route path='/teams' component={Teams}/>
-                            <Route path='/sport-section' component={SportSection}/>
                             <Route path='/settings' component={Settings}/>
                         </Switch>
-                    </CabinetLayout>
+                    </CoachLayout>
                 </BrowserRouter>
             )
         }
