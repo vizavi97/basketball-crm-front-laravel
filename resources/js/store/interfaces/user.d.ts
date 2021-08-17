@@ -7,7 +7,6 @@ export interface UserStateInterface {
     renderCounter: number
 }
 
-
 export interface UserDispatchInterface {
     user: UserInterface | null | boolean
     token: string | null
@@ -49,13 +48,12 @@ export interface RegisterParamsInterface {
     name: string
 }
 
-
 export interface LoginParamsInterface {
     email?: string
     phone?: string | number
     password: string
 }
 
-
-
 export interface ChangeUserInfoInterface extends UserInterface {}
+
+

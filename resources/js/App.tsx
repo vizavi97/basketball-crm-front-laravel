@@ -37,8 +37,6 @@ function App() {
             })
         }
     }, [renderCounter, toast, error, message]);
-    console.log(user)
-
     if (loader) {
         return (<PreLoader/>)
     }
