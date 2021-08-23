@@ -1,0 +1,100 @@
+[
+  {
+    "title": "\u0422\u0430\u0448\u043a\u0435\u043d\u0442",
+    "created_at": "2021-08-04 12:53:56",
+    "updated_at": "2021-08-04 12:53:56",
+    "id": "1",
+    "code": "tashkent"
+  },
+  {
+    "title": "\u0410\u043d\u0434\u0438\u0436\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:31:48",
+    "updated_at": "2021-08-19 15:31:48",
+    "id": "3",
+    "code": "andizhanskaya-oblast"
+  },
+  {
+    "title": "\u0420\u0435\u0441\u043f\u0443\u0431\u043b\u0438\u043a\u0430 \u041a\u0430\u0440\u0430\u043a\u0430\u043b\u043f\u0430\u043a\u0441\u0442\u0430\u043d",
+    "created_at": "2021-08-19 15:32:11",
+    "updated_at": "2021-08-19 15:32:11",
+    "id": "4",
+    "code": "respublika-karakalpakstan"
+  },
+  {
+    "title": "\u0411\u0443\u0445\u0430\u0440\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:32:26",
+    "updated_at": "2021-08-19 15:32:26",
+    "id": "5",
+    "code": "buharskaya-oblast"
+  },
+  {
+    "title": "\u0414\u0436\u0438\u0437\u0430\u043a\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:32:37",
+    "updated_at": "2021-08-19 15:32:37",
+    "id": "6",
+    "code": "dzhizakskaya-oblast"
+  },
+  {
+    "title": "\u041a\u0430\u0448\u043a\u0430\u0434\u0430\u0440\u044c\u0438\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:32:47",
+    "updated_at": "2021-08-19 15:32:47",
+    "id": "7",
+    "code": "kashkadarinskaya-oblast"
+  },
+  {
+    "title": "\u041d\u0430\u0432\u043e\u0438\u0439\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:32:56",
+    "updated_at": "2021-08-19 15:32:56",
+    "id": "8",
+    "code": "navoijskaya-oblast"
+  },
+  {
+    "title": "\u041d\u0430\u043c\u0430\u043d\u0433\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:33:11",
+    "updated_at": "2021-08-19 15:33:11",
+    "id": "9",
+    "code": "namanganskaya-oblast"
+  },
+  {
+    "title": "\u0421\u0430\u043c\u0430\u0440\u043a\u0430\u043d\u0434\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:33:21",
+    "updated_at": "2021-08-19 15:33:21",
+    "id": "10",
+    "code": "samarkandskaya-oblast"
+  },
+  {
+    "title": "\u0421\u0443\u0440\u0445\u0430\u043d\u0434\u0430\u0440\u044c\u0438\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:33:28",
+    "updated_at": "2021-08-19 15:33:28",
+    "id": "11",
+    "code": "surhandarinskaya-oblast"
+  },
+  {
+    "title": "\u0421\u044b\u0440\u0434\u0430\u0440\u044c\u0438\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:33:36",
+    "updated_at": "2021-08-19 15:33:36",
+    "id": "12",
+    "code": "syrdarinskaya-oblast"
+  },
+  {
+    "title": "\u0422\u0430\u0448\u043a\u0435\u043d\u0442\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:33:44",
+    "updated_at": "2021-08-19 15:33:44",
+    "id": "13",
+    "code": "tashkentskaya-oblast"
+  },
+  {
+    "title": "\u0424\u0435\u0440\u0433\u0430\u043d\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:34:51",
+    "updated_at": "2021-08-19 15:34:51",
+    "id": "15",
+    "code": "ferganskaya-oblast"
+  },
+  {
+    "title": "\u0425\u043e\u0440\u0435\u0437\u043c\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c",
+    "created_at": "2021-08-19 15:35:01",
+    "updated_at": "2021-08-19 15:35:01",
+    "id": "16",
+    "code": "horezmskaya-oblast"
+  }
+]

@@ -18,6 +18,7 @@ export const register = (params: RegisterParamsInterface) => async (dispatch: Di
     await axios.post(`${BACKEND_API_URL}signup`, {
         name: params.name,
         email: params.email,
+        phone: params.phone,
         password: params.password,
         password_confirmation: params.password_confirmation,
     })

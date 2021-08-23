@@ -29,7 +29,6 @@ export interface RegisterFormInterface {
 export const Register: React.FC = () => {
     const toast = useToast()
     const dispatch = useDispatch();
-    const [activeTab, setActiveTab] = useState('email')
     const [form, setForm] = useState<RegisterFormInterface>({
         email: '',
         phone: '',
@@ -48,7 +47,7 @@ export const Register: React.FC = () => {
     };
     const submitHandler = async (event: FormEvent) => {
         event.preventDefault();
-        const error = validateRegister(form, activeTab);
+        const error = validateRegister(form);
         if (error) {
             toast({
                 title: "Ошибка",
@@ -63,6 +62,7 @@ export const Register: React.FC = () => {
             await dispatch(register({
                 email: form.email,
                 name: form.name,
+                phone: `+998${form.phone}`,
                 password: form.password,
                 password_confirmation: form.password_confirmation
             }))
@@ -110,6 +110,31 @@ export const Register: React.FC = () => {
                         isDisabled={disable}
                         _disabled={{cursor: 'not-allowed'}}
                     />
+                </Box>
+                {/*PHONE*/}
+                <Box textAlign={'left'} py={2}>
+                    <Text fontSize={'14px'} fontWeight={300} pb={1}>Номер телефона</Text>
+                    <Flex alignItems={"center"}>
+                        <Box
+                            border='1px solid #e2e8f0'
+                            h={'49px'}
+                            p={3}
+                            borderRadius={'.5rem'}
+                            mr={2}
+                        >+998</Box>
+                        <Input
+                            border='1px solid rgba(255, 255, 255, 0.1)'
+                            placeholder="Телефон"
+                            type='number'
+                            h='49px'
+                            _focus={{border: "1px solid #36AB7E"}}
+                            name='phone'
+                            value={form.phone}
+                            onChange={inputHandler}
+                            isDisabled={disable}
+                            _disabled={{cursor: 'not-allowed'}}
+                        />
+                    </Flex>
                 </Box>
                 {/*PASSWORD*/}
                 <Box textAlign={'left'} py={2}>

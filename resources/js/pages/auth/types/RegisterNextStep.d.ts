@@ -1,5 +1,5 @@
 export interface RegisterNextStepInterface<T> {
-    role: "Coach" | "Player" | "Administration" | "" | String
+    role: RoleInterface['coach']
     info: T
 }
 
@@ -10,6 +10,7 @@ export interface CoachRegisterInterface {
     position: "Главный" | "Помощник"
     pc_quality: "Высокий" | "Средний" | "Низкий" | "Никогда не работал" | ""
     langs: string
+    region: string
     living_address: string
     working_address: string
     birth: string | number | readonly string[] | undefined
@@ -23,3 +24,6 @@ export interface CoachRegisterInterface {
     other_files: any,
 }
 
+export interface RoleInterface {
+    role: "Coach" | "Player" | "Administration" | "" | String
+}

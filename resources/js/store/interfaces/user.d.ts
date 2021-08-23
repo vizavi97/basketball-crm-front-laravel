@@ -42,7 +42,8 @@ export interface UserLoadingDispatchInterface {
 
 
 export interface RegisterParamsInterface {
-    email?: string
+    email: string
+    phone: string
     password: string
     password_confirmation: string
     name: string

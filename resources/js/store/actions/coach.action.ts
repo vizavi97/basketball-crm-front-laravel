@@ -3,30 +3,26 @@ import {DispatchEvent} from "../redux";
 import {BACKEND_API_URL} from "../../config/app.config";
 import axios from "axios";
 import {CoachRegisterInterface} from "../../pages/auth/types/RegisterNextStep";
-import {ACTIVATE_USER, LOGIN_USER, REGISTER_USER} from "../types/user.types";
-import {GET_COACH_PROFILE} from "../types/coach.types";
+import {LOGIN_USER} from "../types/user.types";
 
-export const coachRegister = (params: CoachRegisterInterface,user_id: string) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
+export const coachRegister = (params: CoachRegisterInterface) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
     const formData = new FormData();
-    formData.append("name", params.name)
-    formData.append("user_id", user_id)
-    formData.append("surname", params.surname)
-    formData.append("position", params.position)
-    formData.append("pc_quality", params.pc_quality)
-    formData.append("langs", params.langs)
-    formData.append("living_address", params.living_address)
-    formData.append("working_address", params.working_address)
-    formData.append("birth", params.birth as string)
-    formData.append("nationality", params.nationality)
-    formData.append("preview_img", params.preview_img[0].file)
-    formData.append("passport", params.passport[0].file)
-    formData.append("diploma_file", params.diploma_file[0].file)
-    formData.append("certificate_file", params.certificate_file[0].file)
-    formData.append("categories_file", params.categories_file[0].file)
-    formData.append("international_file", params.international_file[0].file)
-    if (params.other_files.length) {
-        formData.append("other_files", params.other_files[0].file)
-    }
+    Object.entries(params).forEach(([key, value]) => {
+            if (key === "preview_img"
+                || key === "passport"
+                || key === "diploma_file"
+                || key === "certificate_file"
+                || key === "categories_file"
+                || key === "international_file"
+                || key === "other_files" && params.other_files.length
+            ) {
+                formData.append(key, value[0].file)
+            } else {
+                formData.append(key, value)
+            }
+        });
+    const token = localStorage.getItem('token') ?? " ";
+    formData.append("token",  token);
     await axios.post(`${BACKEND_API_URL}coach-register`,formData,
         {
             headers: {
@@ -48,6 +44,7 @@ export const coachRegister = (params: CoachRegisterInterface,user_id: string) =>
                     }
                 })
             }
+            console.log("RESPONSE: ",resp)
         })
-        .catch(resp => console.log("reso", resp))
+        .catch(err => console.log("ERR", err))
 }

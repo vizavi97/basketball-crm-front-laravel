@@ -1,30 +1,33 @@
-import React, {ChangeEvent, FormEvent, useState} from 'react'
-import {Box, Button, Flex, Image, Input, Select, Text, useToast} from "@chakra-ui/react";
+import React, {ChangeEvent, FormEvent, useEffect, useState} from 'react'
+import {Box, Button, Flex, Image,  Select, Text, useToast} from "@chakra-ui/react";
 import {validateRegisterNextStep} from "../../../tools/auth/register.role.validate";
 import {CoachRegisterInterface, RegisterNextStepInterface} from "../types/RegisterNextStep";
 import {InputField} from "../../../components/InputField";
 import ImageUploading, {ImageListType} from "react-images-uploading";
 import 'react-datepicker/dist/react-datepicker.css'
+import {RegionInterface} from "../../../interfaces/all";
 // @ts-ignore
 import DatePicker from "react-datepicker/dist/react-datepicker";
-import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
+import { useDispatch} from "react-redux";
 import {coachRegister} from "../../../store/actions/coach.action";
+import axios from "axios";
+import {BACKEND_API_URL} from "../../../config/app.config";
 
-interface CoachInterface {role: string}
 
-export const Coach: React.FC<CoachInterface> = ({role}) => {
+export const Coach: React.FC = () => {
     const toast = useToast()
     const dispatch = useDispatch();
-    const {user} = useSelector((state:RootStateOrAny) => state.user)
+    const [region, setRegion] = useState<[] | RegionInterface[]>([])
     const [disable, setDisable] = useState<boolean>(false);
     const [form, setForm] = useState<RegisterNextStepInterface<CoachRegisterInterface>>({
-        role: role,
+        role: "Coach",
         info: {
             name: "",
             surname: "",
             position: "Главный",
             pc_quality: "",
             langs: "",
+            region: "",
             living_address: "",
             working_address: "",
             birth: "",
@@ -38,6 +41,15 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
             other_files: [],
         }
     })
+    useEffect(() => {
+        axios.get(`${BACKEND_API_URL}region`)
+            .then(resp => setRegion(() => resp.data))
+            .catch(() => setRegion(() => [{
+                code: "tashkent",
+                id: "1",
+                title: "Ташкент",
+            }]))
+    }, [])
     const inputHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = event.target
         setForm(state => ({
@@ -60,9 +72,21 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
 
         }))
     };
+    const dateHandler = (date: string) => setForm(state => ({
+        ...state,
+        info: {...state.info, birth: new Date(date).toLocaleDateString()}
+    }));
+    const imageUploaderHandler = (imageList: ImageListType, name: string) => setForm(state => ({
+        ...state,
+        info: {
+            ...state.info,
+            [name]: imageList as never[]
+        }
+    }));
     const submitHandler = async (event: FormEvent) => {
         event.preventDefault();
-        const error = validateRegisterNextStep(form.info, role);
+        const error = validateRegisterNextStep(form);
+
         if (error) {
             toast({
                 title: "Ошибка",
@@ -77,24 +101,15 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
             toast({
                 title: "Успешно",
                 position: "top",
-                description: "Отправляются данные на обработку",
+                description: "Данные отправляются на обработку",
                 status: "info",
                 duration: 7000,
                 isClosable: true,
             })
-            dispatch(coachRegister(form.info, String(user.id)))
+            dispatch(coachRegister(form.info))
             setDisable(() => false)
         }
     };
-    const dateHandler = (date: string) => setForm(state => ({...state, info: {...state.info, birth: new Date(date).toLocaleDateString()}} ));
-
-    const imageUploaderHandler = (imageList: ImageListType, name: string) => setForm(state => ({
-        ...state,
-        info: {
-            ...state.info,
-            [name]: imageList as never[]
-        }
-    }));
     return (
         <Flex as={'form'} onSubmit={submitHandler} method="POST" flexDirection={'column'} pt={4}>
             <InputField onChange={inputHandler} value={form.info.name} label={"Имя"} placeholder={"Имя"} name={"name"}
@@ -107,18 +122,37 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                         placeholder={"Место работы"} name={"working_address"} type={"text"} disable={disable}/>
             <InputField onChange={inputHandler} value={form.info.nationality} label={"Национальность"}
                         placeholder={"Национальность"} name={"nationality"} type={"text"} disable={disable}/>
-            <Select placeholder="Владение компьютером *"
-                    name={"pc_quality"}
+            <Box textAlign={'left'} py={2}>
+                <Text fontSize={'14px'} fontWeight={300} pb={1}>Выберете область, к которой относитесь, так же к этой
+                    области будут прикреплены ваши
+                    игроки *</Text>
+                <Select
+                    name={"region"}
                     onChange={selectHandler}
-                    mt={2}>
-                <option value="h">Высокий (Полностью понимаю)</option>
-                <option value="m">Средний (Знаю азы - Word, excel, и другие основные программы)</option>
-                <option value="l">Низкий (Знаю как включать)</option>
-                <option value="n">Никогда не пользовался</option>
-            </Select>
+                    mt={2}
+                    placeholder={'Выберете область'}
+                >
+                    {region.map((item: RegionInterface, key: number) =>
+                        <option key={key} value={item.id}>{item.title}</option>
+                    )}
+                </Select>
+            </Box>
+            <Box textAlign={'left'} py={2}>
+                <Text fontSize={'14px'} fontWeight={300} pb={1}>Опишите уровень владения компьютером*</Text>
+                <Select placeholder="Владение компьютером *"
+                        name={"pc_quality"}
+                        onChange={selectHandler}
+                        mt={2}>
+                    <option value="h">Высокий (Полностью понимаю)</option>
+                    <option value="m">Средний (Знаю азы - Word, excel, и другие основные программы)</option>
+                    <option value="l">Низкий (Знаю как включать)</option>
+                    <option value="n">Никогда не пользовался</option>
+                </Select>
+            </Box>
             <InputField onChange={inputHandler} value={form.info.langs}
                         label={"Опишите владение языка в формате от 1 до 5  (Русский 5, Узбекский: 3)"}
-                        placeholder={"Опишите владение языка в формате от 1 до 5  (Русский 5, Узбекский: 3)"} name={"langs"} type={"text"} disable={disable}/>
+                        placeholder={"Опишите владение языка в формате от 1 до 5  (Русский 5, Узбекский: 3)"}
+                        name={"langs"} type={"text"} disable={disable}/>
 
             <Box py={4}>
                 <Text mb="8px" textAlign="left">
@@ -143,7 +177,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.preview_img}
-                    onChange={(image) => imageUploaderHandler(image,"preview_img")}
+                    onChange={(image) => imageUploaderHandler(image, "preview_img")}
                     maxNumber={1}
                 >
                     {({
@@ -206,7 +240,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.passport}
-                    onChange={(image) => imageUploaderHandler(image,"passport")}
+                    onChange={(image) => imageUploaderHandler(image, "passport")}
                     maxNumber={1}
                 >
                     {({
@@ -269,7 +303,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.diploma_file}
-                    onChange={(image) => imageUploaderHandler(image,"diploma_file")}
+                    onChange={(image) => imageUploaderHandler(image, "diploma_file")}
                     maxNumber={1}
                 >
                     {({
@@ -333,7 +367,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.certificate_file}
-                    onChange={(image) => imageUploaderHandler(image,"certificate_file")}
+                    onChange={(image) => imageUploaderHandler(image, "certificate_file")}
                     maxNumber={1}
                 >
                     {({
@@ -396,7 +430,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.categories_file}
-                    onChange={(image) => imageUploaderHandler(image,"categories_file")}
+                    onChange={(image) => imageUploaderHandler(image, "categories_file")}
                     maxNumber={1}
                 >
                     {({
@@ -459,7 +493,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.international_file}
-                    onChange={(image) => imageUploaderHandler(image,"international_file")}
+                    onChange={(image) => imageUploaderHandler(image, "international_file")}
                     maxNumber={1}
                 >
                     {({
@@ -522,7 +556,7 @@ export const Coach: React.FC<CoachInterface> = ({role}) => {
                 </Text>
                 <ImageUploading
                     value={form.info.other_files}
-                    onChange={(image) => imageUploaderHandler(image,"other_files")}
+                    onChange={(image) => imageUploaderHandler(image, "other_files")}
                     maxNumber={1}
                 >
                     {({
