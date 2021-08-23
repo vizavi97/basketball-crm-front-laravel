@@ -1,8 +1,7 @@
 import React, {useEffect} from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom'
+import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom'
 import {Login} from "./pages/auth/Login";
 import {Main} from "./pages/private/Main";
-import {CabinetLayout} from "./components/layout/cabinet/CabinetLayout";
 import {Staff} from "./pages/private/staff/Staff";
 import {Teams} from "./pages/private/team/Teams";
 import {Settings} from "./pages/private/settings/Settings";
@@ -16,6 +15,10 @@ import {RestorePassword} from "./pages/auth/RestorePassword";
 import {RestorePasswordField} from "./pages/auth/RestorePasswordField";
 import {RegisterNextStep} from "./pages/auth/RegisterNextStep";
 import {CoachLayout} from "./components/layout/cabinet/CoachLayout";
+import {RegisterPlayer} from "./pages/auth/RegisterPlayer";
+import {RegisterNextStepPlayer} from "./pages/auth/RegisterNextStepPlayer";
+import {PlayerLayout} from "./components/layout/cabinet/PlayerLayout";
+import {Player} from "./pages/private/player/Player";
 
 
 function App() {
@@ -55,6 +58,29 @@ function App() {
                 </BrowserRouter>
             )
         }
+        if(user.is_activated && user.role === "player") {
+            return (
+                <BrowserRouter>
+                    <PlayerLayout>
+                        <Switch>
+                            <Route exact path='/' component={Player}/>
+                            <Redirect to={'/'} />
+                        </Switch>
+                    </PlayerLayout>
+                </BrowserRouter>
+            )
+        }
+        if(!user.is_activated && user.role === "player") {
+            return (
+                <BrowserRouter>
+                    <AuthLayout>
+                        <Switch>
+                            <Route exact path='/*' component={RegisterNextStepPlayer}/>
+                        </Switch>
+                    </AuthLayout>
+                </BrowserRouter>
+            )
+        }
         return (
             <BrowserRouter>
                 <AuthLayout>
@@ -64,7 +90,17 @@ function App() {
                 </AuthLayout>
             </BrowserRouter>
         )
-
+    }
+    if(location.search.includes('ref')) {
+        return (
+            <BrowserRouter>
+                <AuthLayout>
+                    <Switch>
+                        <Route exact path='/*' component={RegisterPlayer}/>
+                    </Switch>
+                </AuthLayout>
+            </BrowserRouter>
+        )
     }
     return (
         <BrowserRouter>

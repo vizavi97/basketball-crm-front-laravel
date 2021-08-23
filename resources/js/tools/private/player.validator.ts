@@ -7,7 +7,6 @@ export const createPlayerValidator = (state: CreatePlayerFormInterface): string 
         || !state.father_name
         || !state.gender
         || !state.game_number
-        || !state.phone_number
         || !state.birth
         || !state.nationality
         || !state.place_of_birth

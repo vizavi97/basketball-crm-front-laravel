@@ -4,8 +4,9 @@ import {CreatePlayerFormInterface} from "../../pages/private/staff/CreatePlayer"
 import axios from "axios";
 import {BACKEND_API_URL} from "../../config/app.config";
 import {CREATE_PLAYER, DELETE_PLAYER, GET_PLAYERS, LOADING_PLAYERS} from "../types/player.types";
+import {LOGIN_USER} from "../types/user.types";
 
-export const createPlayer = (params: CreatePlayerFormInterface, coach_id: string | number) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
+export const createPlayer = (params: CreatePlayerFormInterface) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
     const formData = new FormData();
     Object.entries(params).forEach(
         ([key, value]) => {
@@ -16,7 +17,10 @@ export const createPlayer = (params: CreatePlayerFormInterface, coach_id: string
             }
         }
     );
-    formData.append("coach_id", String(coach_id))
+    const coachId = localStorage.getItem('coach_id') ?? ' ';
+    const token = localStorage.getItem('token') ?? ' ';
+    formData.append("coach_id", coachId)
+    formData.append("token", token)
     await axios.post(`${BACKEND_API_URL}player/create`, formData,
         {
             headers: {
@@ -25,13 +29,20 @@ export const createPlayer = (params: CreatePlayerFormInterface, coach_id: string
         }
     )
         .then(resp => {
-            console.log(resp.data)
-            dispatch({
-                type: CREATE_PLAYER,
-                payload: {
-                    players: resp.data.player
-                }
-            })
+            console.log(resp.data.user)
+            if(resp.data.is_activated) {
+                dispatch({
+                    type: LOGIN_USER,
+                    payload: {
+                        user: {...resp.data.user, role: resp.data.user.groups[0].code},
+                        token: localStorage.getItem('token'),
+                        loader: false,
+                        error: false,
+                        message: "Добро пожаловать Игрок",
+                        renderCounter: 1
+                    }
+                })
+            }
         })
         .catch(error => console.log("error", error))
 }

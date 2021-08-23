@@ -69,7 +69,7 @@ export interface SelectTeamFormInterface {
 
 export const CreateTeam: React.FC<CreateTeamInterface> = ({logout}) => {
     const toast = useToast()
-    const {coach, player} = useSelector((state: RootStateOrAny) => state)
+    const {coach, player,user} = useSelector((state: RootStateOrAny) => state)
     const dispatch = useDispatch();
     const [disable, setDisable] = useState<boolean>(false)
     const [form, setForm] = useState<SelectTeamFormInterface>({
@@ -134,7 +134,7 @@ export const CreateTeam: React.FC<CreateTeamInterface> = ({logout}) => {
                 duration: 7000,
                 isClosable: true,
             })
-            dispatch(createTeam(form, coach.coach.id))
+            dispatch(createTeam(form, user.user.id))
             setDisable(() => false)
             logout();
         }

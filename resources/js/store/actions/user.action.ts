@@ -49,6 +49,42 @@ export const register = (params: RegisterParamsInterface) => async (dispatch: Di
             })
         })
 }
+export const registerPlayer = (params: RegisterParamsInterface) => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface>>) => {
+    await axios.post(`${BACKEND_API_URL}signup-player`, {
+        name: params.name,
+        email: params.email,
+        phone: params.phone,
+        password: params.password,
+        password_confirmation: params.password_confirmation,
+    })
+        .then((resp) => {
+            const ref = new URL(location.href).searchParams.get("ref")
+            if(ref) {localStorage.setItem('coach_id', ref)}
+            localStorage.setItem('token', resp.data.token)
+            dispatch({
+                type: REGISTER_USER,
+                payload: {
+                    user: resp.data.user,
+                    token: resp.data.token,
+                    loader: false,
+                    message: 'Ваш вккаунт создан!',
+                    error: false
+                }
+            })
+        })
+        .catch(error => {
+            dispatch({
+                type: REGISTER_USER,
+                payload: {
+                    user: null,
+                    token: null,
+                    loader: false,
+                    message: `Ошибка: ${error.response.status === 401 ? "Такой Email уже используется" : error.response.data.error}`,
+                    error: true
+                }
+            })
+        })
+}
 
 export const login = (params: LoginParamsInterface) => async (dispatch: Dispatch<DispatchEvent<UserDispatchInterface | any>>) => {
     await axios.post(`${BACKEND_API_URL}login`, {

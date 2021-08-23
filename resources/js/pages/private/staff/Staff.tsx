@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {Button, Flex, Grid} from "@chakra-ui/react";
 import {PlayerCard} from "./PlayerCard";
 import {SkeletonStack} from "../../../components/ui/skeleton/SkeletonStack";
-import {CreatePlayer, CreatePlayerFormInterface} from "./CreatePlayer";
+import {CreatePlayerFormInterface} from "./CreatePlayer";
 import {RootStateOrAny, useSelector} from "react-redux";
 
 
@@ -17,23 +17,20 @@ export const Staff: React.FC = () => {
                     {create ? "Отменить" : "Добавить Игрока"}
                 </Button>
             </Flex>
-            {create
-                ? <CreatePlayer logout={() => setCreate(prevState => !prevState)}/>
-                : <Grid
-                    templateColumns={{base: 'repeat(1, 1fr)', md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)"}}
-                    gap={6}>
-                    {player.loader
-                        ? <SkeletonStack length={3}/>
-                        : player.players.length ? player.players.map((item: CreatePlayerFormInterface, key: number) =>
-                            <PlayerCard
-                                key={key}
-                                id={item.id ?? ""}
-                                icon={item.preview_img.path}
-                                name={item.name} surname={item.surname} number={item.game_number}
-                                position={item.position}/>) : null
-                    }
-                </Grid>
-            }
+            <Grid
+                templateColumns={{base: 'repeat(1, 1fr)', md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)"}}
+                gap={6}>
+                {player.loader
+                    ? <SkeletonStack length={3}/>
+                    : player.players.length ? player.players.map((item: CreatePlayerFormInterface, key: number) =>
+                        <PlayerCard
+                            key={key}
+                            id={item.id ?? ""}
+                            icon={item.preview_img.path}
+                            name={item.name} surname={item.surname} number={item.game_number}
+                            position={item.position}/>) : null
+                }
+            </Grid>
         </>
     )
 }

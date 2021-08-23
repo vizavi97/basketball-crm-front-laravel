@@ -44,7 +44,6 @@ export const coachRegister = (params: CoachRegisterInterface) => async (dispatch
                     }
                 })
             }
-            console.log("RESPONSE: ",resp)
         })
         .catch(err => console.log("ERR", err))
 }
