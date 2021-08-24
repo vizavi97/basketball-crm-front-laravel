@@ -25,7 +25,6 @@ export const validateRegisterNextStep = (state: RegisterNextStepInterface<CoachR
             || !info.diploma_file.length
             || !info.certificate_file.length
             || !info.categories_file.length
-            || !info.international_file.length
         )
             return "Все документы должны быть загруженны"
     }

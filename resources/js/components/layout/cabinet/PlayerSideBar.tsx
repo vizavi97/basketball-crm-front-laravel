@@ -1,9 +1,8 @@
 import {Box, Button, Flex, Image, Link, useColorMode, Text} from '@chakra-ui/react';
 import {Link as RouterLink} from 'react-router-dom'
 import React from 'react'
-import {RouterLinks} from "./RouterLinks";
 import { Block } from '../../../config/ui/Block';
-import {useDispatch} from "react-redux";
+import {RootStateOrAny, useDispatch, useSelector} from "react-redux";
 import {logOutUser} from "../../../store/actions/user.action";
 import {PlayerRouterLinks} from "./PlayerRouterLinks";
 

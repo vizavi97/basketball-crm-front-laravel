@@ -71,7 +71,7 @@ export const RegisterPlayer: React.FC = () => {
     };
     return (
         <Box>
-            <Text fontSize='1.5rem'>Создать аккаунт</Text>
+            <Text fontSize='1.5rem'>Создать аккаунт игрока</Text>
             <Flex as={'form'} onSubmit={submitHandler} method="POST" flexDirection={'column'} pt={4}>
                 <Box textAlign={'left'} py={2}>
                     <Text fontSize={'14px'} fontWeight={300} pb={1}>Электронная почта</Text>

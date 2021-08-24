@@ -36,7 +36,7 @@ const TopBar: React.FC<TopBarInterface> = ({history}) => {
     const {isOpen, onOpen, onClose} = useDisclosure()
     history.listen(() => onClose());
     const {colorMode, toggleColorMode} = useColorMode();
-    const {coach} = useSelector((state: RootStateOrAny) => state)
+    const {coach,user} = useSelector((state: RootStateOrAny) => state)
     const dispatch = useDispatch();
 
     return (
@@ -88,7 +88,7 @@ const TopBar: React.FC<TopBarInterface> = ({history}) => {
                                             <Text d={{
                                                 base: 'none',
                                                 md: 'block'
-                                            }}>{coach.coach ? coach.coach.name + " " + coach.coach.name : null}</Text>
+                                            }}>{coach.coach ? coach.coach.name + " " + coach.coach.name : user.user.name}</Text>
                                         </Flex>
                                     </MenuButton>
                                     <MenuList right={0}>
