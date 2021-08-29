@@ -15,10 +15,7 @@ import {Provider} from "react-redux";
 import {rootReducer} from "./store/reducers/root.reducer";
 
 
-const store = createStore(rootReducer, compose(
-    applyMiddleware(thunk),
-    composeWithDevTools()
-));
+const store = createStore(rootReducer, (window as any).__REDUX_DEVTOOLS_EXTENSION__ ? composeWithDevTools(applyMiddleware(thunk)) : compose(applyMiddleware(thunk)));
 
 
 const wrapper =  <ChakraProvider theme={chakraTheme}>
