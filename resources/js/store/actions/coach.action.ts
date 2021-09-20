@@ -3,9 +3,14 @@ import {DispatchEvent} from "../redux";
 import {BACKEND_API_URL} from "../../config/app.config";
 import axios from "axios";
 import {CoachRegisterInterface} from "../../pages/auth/types/RegisterNextStep";
-import {LOGIN_USER} from "../types/user.types";
+import {FETCHING_USER, LOGIN_USER} from "../types/user.types";
 
 export const coachRegister = (params: CoachRegisterInterface) => async (dispatch: Dispatch<DispatchEvent<any>>) => {
+    dispatch({
+        type: FETCHING_USER,
+        payload: {
+          is_fetching:  true
+        }})
     const formData = new FormData();
     Object.entries(params).forEach(([key, value]) => {
             if (key === "preview_img"
@@ -39,6 +44,7 @@ export const coachRegister = (params: CoachRegisterInterface) => async (dispatch
                         token: localStorage.getItem('token'),
                         loader: false,
                         error: false,
+                        is_fetching: false,
                         message: "Добро пожаловать Тренер",
                         renderCounter: 1
                     }

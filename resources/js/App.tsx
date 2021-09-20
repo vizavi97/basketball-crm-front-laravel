@@ -13,12 +13,12 @@ import {AuthLayout} from "./components/layout/auth/AuthLayout";
 import {Register} from "./pages/auth/Register";
 import {RestorePassword} from "./pages/auth/RestorePassword";
 import {RestorePasswordField} from "./pages/auth/RestorePasswordField";
-import {RegisterNextStep} from "./pages/auth/RegisterNextStep";
 import {CoachLayout} from "./components/layout/cabinet/CoachLayout";
 import {RegisterPlayer} from "./pages/auth/RegisterPlayer";
 import {RegisterNextStepPlayer} from "./pages/auth/RegisterNextStepPlayer";
 import {PlayerLayout} from "./components/layout/cabinet/PlayerLayout";
 import {Player} from "./pages/private/player/Player";
+import {CoachRegisterNextStep} from "./pages/auth/register-next-step-cases/CoachRegisterNextStep";
 
 
 function App() {
@@ -85,7 +85,7 @@ function App() {
             <BrowserRouter>
                 <AuthLayout>
                     <Switch>
-                        <Route exact path='/*' component={RegisterNextStep}/>
+                        <Route exact path='/*' component={CoachRegisterNextStep}/>
                     </Switch>
                 </AuthLayout>
             </BrowserRouter>

@@ -1,5 +1,6 @@
 export interface UserStateInterface {
     user: UserInterface | null | boolean
+    is_fetching: boolean
     token: string | null
     loader: boolean
     error: boolean

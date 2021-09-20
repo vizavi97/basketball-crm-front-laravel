@@ -2,7 +2,7 @@ import {DispatchEvent} from "../redux";
 import {UserStateInterface} from "../interfaces/user";
 import {
     ACTIVATE_USER,
-    CHANGE_USER_PROFILE,
+    CHANGE_USER_PROFILE, FETCHING_USER,
     LOADING_USER,
     LOGIN_USER,
     LOGOUT_USER,
@@ -15,6 +15,7 @@ const initialState = {
     user: null,
     token: localStorage.getItem('token') || null,
     loader: false,
+    is_fetching: false,
     error: false,
     message: '',
     renderCounter: 0
@@ -63,6 +64,7 @@ export const userReducer = (state = initialState, action: DispatchEvent<any>) =>
             }
         case LOGOUT_USER:
             return {
+                ...state,
                 user: payload.user,
                 token: payload.token,
                 loader: payload.loader,
@@ -72,8 +74,14 @@ export const userReducer = (state = initialState, action: DispatchEvent<any>) =>
             }
         case LOADING_USER:
             return {
+                ...state,
                 loader: payload.loader,
                 renderCounter: 0
+            }
+        case FETCHING_USER:
+            return {
+                ...state,
+                is_fetching: payload.is_fetching
             }
         case ACTIVATE_USER:
             return {
