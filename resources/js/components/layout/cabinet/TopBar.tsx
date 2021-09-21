@@ -84,7 +84,7 @@ const TopBar: React.FC<TopBarInterface> = ({history}) => {
                                         <Flex alignItems={'center'}>
                                             <Avatar h={{base: '48px', md: "42px"}} w={{base: '48px', md: "42px"}}
                                                     mr={{base: "0", md: '1.125rem'}} name="Dan Abrahmov"
-                                                    src="https://bit.ly/dan-abramov"/>
+                                                    src={user.user.preview_img.path}/>
                                             <Text d={{
                                                 base: 'none',
                                                 md: 'block'
