@@ -24,9 +24,4 @@ const wrapper =  <ChakraProvider theme={chakraTheme}>
             </Provider>
         </ChakraProvider>;
 
-ReactDOM.render(
-    <React.StrictMode>
-        {wrapper}
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+ReactDOM.render(wrapper,document.getElementById('root'));

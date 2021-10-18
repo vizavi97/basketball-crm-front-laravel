@@ -76,13 +76,16 @@ export const CoachRegisterNextStep: React.FC = () => {
         ...state,
         info: {...state.info, birth: new Date(date).toLocaleDateString()}
     }));
-    const imageUploaderHandler = (imageList: ImageListType, name: string) => setForm(state => ({
-        ...state,
-        info: {
-            ...state.info,
-            [name]: imageList as never[]
-        }
-    }));
+    const imageUploaderHandler = (imageList: ImageListType, name: string) => {
+        console.log(imageList)
+        setForm(state => ({
+            ...state,
+            info: {
+                ...state.info,
+                [name]: imageList as never[]
+            }
+        }))
+    };
     const submitHandler = async (event: FormEvent) => {
         event.preventDefault();
         const error = validateRegisterNextStep(form);

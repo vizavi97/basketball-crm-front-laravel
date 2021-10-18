@@ -26,7 +26,7 @@ function App() {
     const {user, loader, message, error, renderCounter} = useSelector((state: RootStateOrAny) => state.user);
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(meQuery())
+         dispatch(meQuery())
     }, [dispatch])
     useEffect(() => {
         if (message) {

@@ -1,12 +1,12 @@
-import React from 'react'
-import {Box, Input, Text} from "@chakra-ui/react";
+import React, {HTMLInputTypeAttribute} from 'react'
+import {Box, Input, InputProps, Text} from "@chakra-ui/react";
 
 interface InputTextInterface {
     value: string | number,
     label: string,
     placeholder: string,
     name: string,
-    type: "text" | "number",
+    type: HTMLInputTypeAttribute,
     disable: boolean,
     onChange: any
 
@@ -16,7 +16,7 @@ export const InputField: React.FC<InputTextInterface> = ({
                                                              value,
                                                              label,
                                                              name,
-                                                             type,
+                                                             type = "text",
                                                              disable,
                                                              placeholder,
                                                              onChange
